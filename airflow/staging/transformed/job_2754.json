@@ -1,0 +1,35 @@
+{
+    "job": {
+        "title": "DevOps Engineer",
+        "industry": "",
+        "description": "Role: Infra DevOps engineer&lt;br&gt;Location: Morrisville, NC (remote till covid)&lt;br&gt;Mode: Contract&lt;br&gt;&lt;br&gt;Detailed Job description:&lt;br&gt;\u2022 Minimum 5 years as an Infrastructure DevOps or automation engineer&lt;br&gt;\u2022 Proficient in server side scripting&lt;br&gt;\u2022 Knowledge of DevOps capabilities such as Continuous Integration and Delivery (CI/CD), Automated Testing, etc.&lt;br&gt;\u2022 Knowledge on Terraform is must preferably in Azure&lt;br&gt;\u2022 Good exposure on Micro services architecture and their deployment in cloud world. (Especially Azure +Terraform)&lt;br&gt;\u2022 Should have worked on setting up &amp; troubleshooting Kubernetes Clusters in Production ready environment&lt;br&gt;\u2022 Help teams in migration from monolithic application to Micro services using containerization solutions (Docker, Kubernetes)&lt;br&gt;\u2022 Worked on onboarding Micro services (Middleware/UI) components using DevOps technique &amp; look for improvements&lt;br&gt;\u2022 Prior experience in automating CI/CD process, platform services using open source tools&lt;br&gt;&lt;br&gt;jerrin@smartitframe.com",
+        "employment_type": "CONTRACTOR",
+        "date_posted": "2021-08-05T17:31:11.000Z"
+    },
+    "company": {
+        "name": "Smart IT Frame LLC",
+        "link": "https://www.linkedin.com/company/smart-it-frame-llc"
+    },
+    "education": {
+        "required_credential": "bachelor degree"
+    },
+    "experience": {
+        "months_of_experience": 60,
+        "seniority_level": null
+    },
+    "salary": {
+        "currency": null,
+        "min_value": null,
+        "max_value": null,
+        "unit": null
+    },
+    "location": {
+        "country": "US",
+        "locality": "Mooresville",
+        "region": "NC",
+        "postal_code": "28117",
+        "street_address": null,
+        "latitude": 35.582565,
+        "longitude": -80.81278
+    }
+}
