@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta
 from airflow.decorators import dag, task
 from airflow.providers.sqlite.hooks.sqlite import SqliteHook
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from tasks.extract import extract_jobs
 from tasks.transform import transform_jobs
 from tasks.load import load_jobs
 import os
 
-# Paths for staging directories
 SOURCE_FILE = "/opt/airflow/source/jobs.csv"
 EXTRACTED_PATH = "/opt/airflow/staging/extracted"
 TRANSFORMED_PATH = "/opt/airflow/staging/transformed"
 
-# SQL statements for creating tables
 TABLES_CREATION_QUERIES = [
     """
     CREATE TABLE IF NOT EXISTS job (
@@ -76,22 +75,11 @@ TABLES_CREATION_QUERIES = [
     """,
 ]
 
-# Default DAG arguments
 DAG_DEFAULT_ARGS = {
     "depends_on_past": False,
     "retries": 3,
     "retry_delay": timedelta(minutes=15),
 }
-
-
-@task()
-def create_tables():
-    """Create necessary tables in the SQLite database."""
-    sqlite_hook = SqliteHook(sqlite_conn_id="sqlite_default")
-    for query in TABLES_CREATION_QUERIES:
-        sqlite_hook.run(query)
-    print("All tables created successfully.")
-
 
 @task()
 def extract():
@@ -106,7 +94,6 @@ def extract():
     print(f"Extracted files to: {extracted_path}")
     return extracted_path
 
-
 @task()
 def transform(extracted_path):
     """Transform the extracted data."""
@@ -120,7 +107,6 @@ def transform(extracted_path):
     print(f"Transformed files to: {transformed_path}")
     return transformed_path
 
-
 @task()
 def load(transformed_path):
     """Load the transformed data into SQLite."""
@@ -129,24 +115,25 @@ def load(transformed_path):
     load_jobs(transformed_path)
     print(f"Data loaded from transformed path: {transformed_path}")
 
-
 @dag(
     dag_id="etl_dag",
     description="ETL LinkedIn job posts",
     schedule="@daily",
-    start_date=datetime(2025, 1, 20),
+    start_date=datetime(2025, 1, 21),
     catchup=False,
     default_args=DAG_DEFAULT_ARGS,
 )
 def etl_dag():
     """Define the ETL pipeline."""
-    # Create tables
-    create_tables_task = create_tables()
-    # Extract, transform, and load
+
+    create_tables = SQLExecuteQueryOperator(
+        task_id="create_tables",
+        conn_id="sqlite_default",
+        sql=TABLES_CREATION_QUERIES, 
+    )
+
     extracted_path = extract()
     transformed_path = transform(extracted_path)
-    create_tables_task >> extracted_path >> transformed_path >> load(transformed_path)
+    create_tables >> extracted_path >> transformed_path >> load(transformed_path)
 
-
-# DAG instantiation
 etl_pipeline = etl_dag()

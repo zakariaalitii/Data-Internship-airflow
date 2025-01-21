@@ -1,10 +1,8 @@
-import os
 import json
-from tasks.transform import transform_jobs
+from airflow.dags.tasks.transform import transform_jobs
 
 
 def test_transform_jobs(tmp_path):
-    # Create temporary extracted files
     extracted_path = tmp_path / "extracted"
     extracted_path.mkdir()
     extracted_data = [
@@ -12,17 +10,16 @@ def test_transform_jobs(tmp_path):
         {"title": "Job 2", "industry": "Finance", "description": "Description 2"},
     ]
     for idx, data in enumerate(extracted_data):
-        with open(extracted_path / f"job_{idx}.txt", "w") as f:
+        with open(extracted_path / f"job_{idx}.json", "w") as f:
             json.dump(data, f)
 
-    # Run the transform function
-    transformed_path = transform_jobs(extracted_path)
+    transformed_path = transform_jobs(str(extracted_path))
 
-    # Verify transformed files
     files = list(transformed_path.iterdir())
     assert len(files) == 2
-    for idx, file in enumerate(files):
+    for idx, file in enumerate(sorted(files)):
         with open(file, "r") as f:
             transformed_data = json.load(f)
             assert transformed_data["job"]["title"] == f"Job {idx + 1}"
             assert transformed_data["job"]["industry"] in ["Tech", "Finance"]
+            assert "description" in transformed_data["job"]

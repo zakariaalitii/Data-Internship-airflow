@@ -2,21 +2,21 @@ version: '3.8'
 
 services:
   sleek-airflow:
-    image: apache/airflow:latest # Use the official Apache Airflow image
-    container_name: airflow-sleek # Optional: Name your container for better identification
+    image: apache/airflow:latest 
+    container_name: airflow-sleek 
     environment:
       - AIRFLOW_HOME=/opt/airflow
-      - AIRFLOW__CORE__LOAD_EXAMPLES=False # Disable loading example DAGs
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor # SequentialExecutor for local use (adjust for production)
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False 
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor 
       - PYTHONUNBUFFERED=1
     volumes:
-      - ./airflow/dags:/opt/airflow/dags # Mount your DAGs folder
+      - ./airflow/dags:/opt/airflow/dags 
       - ./airflow/source:/opt/airflow/source
       - ./airflow/staging:/opt/airflow/staging
       - ./airflow/tests:/opt/airflow/tests
-      - ./airflow/logs:/opt/airflow/logs # Mount logs folder
-      - ./airflow/plugins:/opt/airflow/plugins # Mount plugins folder (if any)
+      - ./airflow/logs:/opt/airflow/logs 
+      - ./airflow/plugins:/opt/airflow/plugins 
     ports:
-      - "8080:8080" # Expose the webserver port
-    command: airflow standalone # Run Airflow in standalone mode
-    restart: always # Automatically restart if the container stops
+      - "8080:8080" 
+    command: airflow standalone 
+    restart: always 

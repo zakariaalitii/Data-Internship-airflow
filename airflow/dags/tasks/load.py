@@ -12,11 +12,9 @@ def load_jobs(transformed_path):
     for filename in os.listdir(transformed_path):
         file_path = os.path.join(transformed_path, filename)
         try:
-            # Attempt to load the JSON data
             with open(file_path, "r") as f:
                 data = json.load(f)
 
-            # Insert job data
             sqlite_hook.run(
                 """
                 INSERT INTO job (title, industry, description, employment_type, date_posted)
@@ -26,7 +24,6 @@ def load_jobs(transformed_path):
             )
             job_id = sqlite_hook.get_last_inserted_id()
 
-            # Insert company data
             sqlite_hook.run(
                 """
                 INSERT INTO company (job_id, name, link)
@@ -35,7 +32,6 @@ def load_jobs(transformed_path):
                 parameters={"job_id": job_id, **data["company"]},
             )
 
-            # Insert education data (if present)
             if data.get("education"):
                 sqlite_hook.run(
                     """
@@ -45,7 +41,6 @@ def load_jobs(transformed_path):
                     parameters={"job_id": job_id, **data["education"]},
                 )
 
-            # Insert experience data (if present)
             if data.get("experience"):
                 sqlite_hook.run(
                     """
@@ -55,7 +50,6 @@ def load_jobs(transformed_path):
                     parameters={"job_id": job_id, **data["experience"]},
                 )
 
-            # Insert salary data (if present)
             if data.get("salary"):
                 sqlite_hook.run(
                     """
@@ -65,7 +59,6 @@ def load_jobs(transformed_path):
                     parameters={"job_id": job_id, **data["salary"]},
                 )
 
-            # Insert location data (if present)
             if data.get("location"):
                 sqlite_hook.run(
                     """

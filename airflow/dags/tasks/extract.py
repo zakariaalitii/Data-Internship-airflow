@@ -13,11 +13,11 @@ def extract_jobs(source_file):
 
     for index, row in df.iterrows():
         context = row.get("context")
-        if pd.isna(context):  # Handle missing values
+        if pd.isna(context):  
             print(f"Skipping row {index} due to missing context.")
             continue
         try:
-            parsed_context = json.loads(context)  # Parse JSON
+            parsed_context = json.loads(context) 
         except (TypeError, json.JSONDecodeError) as e:
             print(f"Skipping row {index} due to invalid JSON: {e}")
             continue

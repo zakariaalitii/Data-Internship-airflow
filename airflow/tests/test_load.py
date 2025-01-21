@@ -1,12 +1,10 @@
-import os
 import json
 from unittest.mock import MagicMock, patch
-from tasks.load import load_jobs
+from airflow.dags.tasks.load import load_jobs
 
 
 @patch("tasks.load.SqliteHook")
 def test_load_jobs(mock_sqlite_hook, tmp_path):
-    # Create temporary transformed files
     transformed_path = tmp_path / "transformed"
     transformed_path.mkdir()
     transformed_data = [
@@ -31,15 +29,12 @@ def test_load_jobs(mock_sqlite_hook, tmp_path):
         with open(transformed_path / f"job_{idx}.json", "w") as f:
             json.dump(data, f)
 
-    # Mock the SqliteHook behavior
     mock_hook_instance = MagicMock()
     mock_sqlite_hook.return_value = mock_hook_instance
 
-    # Run the load function
-    load_jobs(transformed_path)
+    load_jobs(str(transformed_path))
 
-    # Verify database insertions
-    assert mock_hook_instance.run.call_count == 4  # 2 jobs + 2 companies
+    assert mock_hook_instance.run.call_count == 4  
     mock_hook_instance.run.assert_any_call(
         """
         INSERT INTO job (title, industry, description, employment_type, date_posted)

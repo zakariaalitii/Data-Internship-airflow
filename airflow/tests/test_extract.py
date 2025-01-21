@@ -1,11 +1,10 @@
 import os
 import json
 import pandas as pd
-from tasks.extract import extract_jobs
+from dags.tasks.extract import extract_jobs
 
 
 def test_extract_jobs(tmp_path):
-    # Create a temporary source CSV file
     source_file = tmp_path / "jobs.csv"
     data = {
         "context": [
@@ -15,11 +14,9 @@ def test_extract_jobs(tmp_path):
     }
     pd.DataFrame(data).to_csv(source_file, index=False)
 
-    # Run the extract function
     extracted_path = tmp_path / "extracted"
     extract_jobs(source_file)
 
-    # Verify extracted files
     files = list(extracted_path.iterdir())
     assert len(files) == 2
     for idx, file in enumerate(files):
